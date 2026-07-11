@@ -157,6 +157,26 @@ def withdraw_route():
 
     if request.method == "POST":
         amount_str = request.form.get("amount", "").strip()
+
+        # --- Validation checks (route-level, before any service call) ---
+        if not amount_str:
+            flash("Amount is required", "danger")
+            return render_template("withdraw.html", balance=balance)
+
+        try:
+            amount_value = float(amount_str)
+        except ValueError:
+            amount_value = None
+
+        if amount_value is None or amount_value <= 0:
+            flash("Amount must be greater than zero", "danger")
+            return render_template("withdraw.html", balance=balance)
+
+        if amount_value > balance:
+            flash("Insufficient funds", "danger")
+            return render_template("withdraw.html", balance=balance)
+        # --- End validation checks ---
+
         result = withdraw(customer_id, amount_str)
 
         if result["success"]:
