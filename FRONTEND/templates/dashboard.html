@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — BankApp</title>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+  <style>
+    body { background-color: #f7f8fa; }
+    .navbar-brand { font-weight: 700; letter-spacing: 0.4px; }
+    .balance-card {
+      background: linear-gradient(135deg, #1a3a5c 0%, #2563a8 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 0.75rem;
+    }
+    .balance-card .balance-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.8;
+    }
+    .balance-card .balance-amount {
+      font-size: 2.4rem;
+      font-weight: 700;
+    }
+    .action-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      transition: box-shadow 0.15s;
+    }
+    .action-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#1a3a5c;">
+    <div class="container">
+      <span class="navbar-brand">&#127981; BankApp</span>
+      <div class="d-flex align-items-center gap-3">
+        <span class="text-white-50 small d-none d-sm-inline">{{ customer_name }}</span>
+        <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4 pb-5">
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show py-2" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Welcome banner -->
+    <h1 class="fs-4 fw-semibold text-dark mb-1">Good day, {{ customer_name }}!</h1>
+    <p class="text-muted mb-4" style="font-size:0.9rem;">Here is your account summary.</p>
+
+    <div class="row g-4">
+
+      <!-- Balance card -->
+      <div class="col-12 col-md-5">
+        <div class="card balance-card p-4 h-100">
+          <p class="balance-label mb-1">Current Balance</p>
+          <p class="balance-amount mb-0">${{ "%.2f"|format(balance) }}</p>
+          <p class="mt-2 mb-0" style="font-size:0.8rem;opacity:0.65;">Savings Account</p>
+        </div>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="col-12 col-md-7">
+        <div class="row g-3 h-100">
+
+          <div class="col-6">
+            <a href="{{ url_for('deposit_route') }}" class="text-decoration-none">
+              <div class="card action-card p-3 text-center h-100">
+                <div class="fs-1 mb-2">&#8659;</div>
+                <p class="fw-semibold mb-0 text-dark">Deposit</p>
+                <p class="text-muted mb-0" style="font-size:0.8rem;">Add funds</p>
+              </div>
+            </a>
+          </div>
+
+          <div class="col-6">
+            <a href="{{ url_for('withdraw_route') }}" class="text-decoration-none">
+              <div class="card action-card p-3 text-center h-100">
+                <div class="fs-1 mb-2">&#8657;</div>
+                <p class="fw-semibold mb-0 text-dark">Withdraw</p>
+                <p class="text-muted mb-0" style="font-size:0.8rem;">Take out funds</p>
+              </div>
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /row -->
+
+  </div><!-- /container -->
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc4s9bIOgUxi8T/jzmAIpWn0OEZBLOVLAYGBbgMwnMNd"
+    crossorigin="anonymous"
+  ></script>
+</body>
+</html>
